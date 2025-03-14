@@ -6,13 +6,17 @@ namespace ACCameraControl
     public partial class Form1 : Form
     {
         private string gameDataOutFile = "dataout.txt";
+        private WindowMove winMv;
+
         public Form1()
         {
             InitializeComponent();
+            winMv = new WindowMove(this);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            dataGridView1.Columns[0].ValueType = typeof(int);
             if (!File.Exists(gameDataOutFile))
             {
                 openFileDialog1.Title = $"找不到文件 {gameDataOutFile} , 请手动指定一个。";
@@ -32,7 +36,7 @@ namespace ACCameraControl
 
         private void LoadDataToGrid()
         {
-            listBox1.Items.Clear();
+            dataGridView1.Rows.Clear();
             var lines = File.ReadAllLines(gameDataOutFile);
             Console.WriteLine("Data Length:" + lines.Length.ToString());
             if (lines.Length == 0)
@@ -58,9 +62,12 @@ namespace ACCameraControl
                 string dID = values[3];
                 string dSpeed = values[4];
                 string dTyres = values[5];
-                string[] sInfos = [dPos, dName, dStatus, dID, dSpeed, dTyres];
-                listBox1.Items.Add(string.Join("  |  ", sInfos));
+                dataGridView1.Rows.Add([dPos, dName, dStatus, dID, dSpeed, dTyres]);
             }
+            dataGridView1.Sort(dataGridView1.Columns[0], System.ComponentModel.ListSortDirection.Ascending);
+            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            autoResizeGridView();
+            //autoResizeForm();
         }
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -73,6 +80,45 @@ namespace ACCameraControl
                 e.CellStyle!.SelectionForeColor = Color.Black;
                 e.CellStyle!.SelectionBackColor = Color.White;
             }
+        }
+
+        private void autoResizeGridView()
+        {
+            int paddingX = 60;
+            int paddingY = 30;
+            int totalColumnWidth = dataGridView1.Columns
+                .Cast<DataGridViewColumn>()
+                .Sum(col => col.Width);
+            int totalRowHeight = dataGridView1.Rows
+                .Cast<DataGridViewRow>()
+                .Sum(row => row.Height) + dataGridView1.ColumnHeadersHeight;
+            dataGridView1.Width = totalColumnWidth + paddingX;
+            dataGridView1.Height = totalRowHeight + paddingY;
+        }
+
+        private void autoResizeForm()
+        {
+            int paddingX = 0;
+            int paddingY = 0;
+            this.ClientSize = new System.Drawing.Size(
+                dataGridView1.Width + paddingX,
+                dataGridView1.Height + paddingY
+            );
+        }
+
+        private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            winMv.MouseDown(sender, e);
+        }
+
+        private void dataGridView1_MouseMove(object sender, MouseEventArgs e)
+        {
+            winMv.MouseMove(sender, e);
+        }
+
+        private void dataGridView1_MouseUp(object sender, MouseEventArgs e)
+        {
+            winMv.MouseUp(sender, e);
         }
     }
 }
