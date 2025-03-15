@@ -1,3 +1,5 @@
+using ACCameraControl.Properties;
+using System.Drawing;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 
@@ -7,16 +9,26 @@ namespace ACCameraControl
     {
         private string gameDataOutFile = "dataout.txt";
         private WindowMove winMv;
+        private Control[] cameraButtons;
 
         public Form1()
         {
             InitializeComponent();
             winMv = new WindowMove(this);
+            cameraButtons = new Control[]
+            {
+                btnCamerasTV,
+                btnCamerasCockpit,
+                btnCamerasHelicopter,
+                btnCamerasCar,
+                btnCamerasRandom
+            };
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             dataGridView1.Columns[0].ValueType = typeof(int);
+            dataGridView1.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             if (!File.Exists(gameDataOutFile))
             {
                 openFileDialog1.Title = $"找不到文件 {gameDataOutFile} , 请手动指定一个。";
@@ -106,19 +118,158 @@ namespace ACCameraControl
             );
         }
 
-        private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
+        private void btnMoveWindow_MouseDown(object sender, MouseEventArgs e)
         {
+            btnMoveWindow.BackColor = Color.Yellow;
             winMv.MouseDown(sender, e);
+        }
+
+        private void btnMoveWindow_MouseMove(object sender, MouseEventArgs e)
+        {
+            winMv.MouseMove(sender, e);
+            btnMinimize.Visible = true;
+            btnExit.Visible = true;
+        }
+
+        private void btnMoveWindow_MouseUp(object sender, MouseEventArgs e)
+        {
+            btnMoveWindow.BackColor = Color.Black;
+            winMv.MouseUp(sender, e);
+        }
+
+        private void btnShowList_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Visible = !dataGridView1.Visible;
+            btnShowList.Image = dataGridView1.Visible ? Resources.keyboard_double_arrow_left_1000dp_FFF_FILL0_wght400_GRAD0_opsz48 : Resources.keyboard_double_arrow_right_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+        }
+
+        private void btnEnableWrite_Click(object sender, EventArgs e)
+        {
+            timerRun.Enabled = !timerRun.Enabled;
+            btnEnableWrite.Image = timerRun.Enabled ? Resources.pause_1000dp_FFF_FILL0_wght400_GRAD0_opsz48 : Resources.play_arrow_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnEnableWrite.BackColor = timerRun.Enabled ? Color.Gray : Color.Black;
+        }
+
+        private void btnMoveWindow_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Location = new Point(0, 0);
         }
 
         private void dataGridView1_MouseMove(object sender, MouseEventArgs e)
         {
-            winMv.MouseMove(sender, e);
+            if (btnMinimize.Visible)
+            {
+                btnMinimize.Visible = false;
+                btnExit.Visible = false;
+            }
         }
 
-        private void dataGridView1_MouseUp(object sender, MouseEventArgs e)
+        private void btnMinimize_Click(object sender, EventArgs e)
         {
-            winMv.MouseUp(sender, e);
+            btnMinimize.Visible = false;
+            btnExit.Visible = false;
+            WindowState = FormWindowState.Minimized;
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void TransgenderPride_Click(object sender, EventArgs e)
+        {
+            Color color1 = ColorTranslator.FromHtml("#F5A9B8");
+            Color color2 = ColorTranslator.FromHtml("#5BCEFA");
+            TransgenderPride.BackColor = (TransgenderPride.BackColor == color1) ? color2 : color1;
+        }
+
+        private int nowSelectedCamera()
+        {
+            for (int i = 0; i < cameraButtons.Length; i++)
+            {
+                if (cameraButtons[i].BackColor == Color.Red)
+                {
+                    return i + 1;
+                }
+            }
+            return 0;
+        }
+
+        private void clearAllCameras()
+        {
+            foreach (var btn in cameraButtons)
+            {
+                btn.BackColor = Color.Black;
+            }
+        }
+
+        private void btnCamerasTV_Click(object sender, EventArgs e)
+        {
+            clearAllCameras();
+            btnCamerasTV.BackColor = Color.Red;
+        }
+
+        private void btnCamerasCockpit_Click(object sender, EventArgs e)
+        {
+            clearAllCameras();
+            btnCamerasCockpit.BackColor = Color.Red;
+        }
+
+        private void btnCamerasHelicopter_Click(object sender, EventArgs e)
+        {
+            clearAllCameras();
+            btnCamerasHelicopter.BackColor = Color.Red;
+        }
+
+        private void btnCamerasCar_Click(object sender, EventArgs e)
+        {
+            clearAllCameras();
+            btnCamerasCar.BackColor = Color.Red;
+        }
+
+        private void btnCamerasRandom_Click(object sender, EventArgs e)
+        {
+            clearAllCameras();
+            btnCamerasRandom.BackColor = Color.Red;
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.F1:
+                    btnCamerasTV_Click(this, new EventArgs());
+                    return true;
+                case Keys.F2:
+                    btnCamerasCockpit_Click(this, new EventArgs());
+                    return true;
+                case Keys.F3:
+                    btnCamerasHelicopter_Click(this, new EventArgs());
+                    return true;
+                case Keys.F4:
+                    btnCamerasCar_Click(this, new EventArgs());
+                    return true;
+                case Keys.F5:
+                    btnCamerasRandom_Click(this, new EventArgs());
+                    return true;
+                case Keys.F11:
+                    btnEnableWrite_Click(this, new EventArgs());
+                    return true;
+                case Keys.F12:
+                    btnShowList_Click(this, new EventArgs());
+                    return true;
+            }
+            if (keyData == (Keys.Alt | Keys.F4) || keyData == (Keys.Control | Keys.Q))
+            {
+                btnExit_Click(this, new EventArgs());
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void timerRun_Tick(object sender, EventArgs e)
+        {
+            btnEnableWrite.BackColor = btnEnableWrite.BackColor == Color.Black ? Color.Gray : Color.Black;
         }
     }
 }

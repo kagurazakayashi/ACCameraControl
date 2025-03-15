@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
             cPos = new DataGridViewTextBoxColumn();
@@ -40,7 +42,31 @@
             cSpeed = new DataGridViewTextBoxColumn();
             cTyres = new DataGridViewTextBoxColumn();
             openFileDialog1 = new OpenFileDialog();
+            btnCamerasTV = new PictureBox();
+            btnCamerasCockpit = new PictureBox();
+            toolTip1 = new ToolTip(components);
+            btnCamerasHelicopter = new PictureBox();
+            btnCamerasCar = new PictureBox();
+            btnCamerasRandom = new PictureBox();
+            btnMoveWindow = new PictureBox();
+            btnShowList = new PictureBox();
+            btnMinimize = new PictureBox();
+            btnExit = new PictureBox();
+            btnEnableWrite = new PictureBox();
+            TransgenderPride = new PictureBox();
+            timerRun = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnCamerasTV).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnCamerasCockpit).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnCamerasHelicopter).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnCamerasCar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnCamerasRandom).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnMoveWindow).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnShowList).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnMinimize).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnExit).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnEnableWrite).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)TransgenderPride).BeginInit();
             SuspendLayout();
             // 
             // dataGridView1
@@ -55,7 +81,7 @@
             dataGridView1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = Color.Black;
-            dataGridViewCellStyle1.Font = new Font("Ignotum", 16F);
+            dataGridViewCellStyle1.Font = new Font("Microsoft YaHei UI", 16F);
             dataGridViewCellStyle1.ForeColor = Color.White;
             dataGridViewCellStyle1.Padding = new Padding(0, 10, 0, 10);
             dataGridViewCellStyle1.SelectionBackColor = Color.Black;
@@ -65,39 +91,48 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { cPos, cName, cStatus, cID, cSpeed, cTyres });
             dataGridView1.Cursor = Cursors.PanEast;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Window;
+            dataGridViewCellStyle3.Font = new Font("BIZ UDGothic", 16F);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.GridColor = Color.FromArgb(64, 64, 64);
-            dataGridView1.Location = new Point(0, 0);
-            dataGridView1.Margin = new Padding(2, 4, 2, 4);
+            dataGridView1.Location = new Point(90, 13);
+            dataGridView1.Margin = new Padding(4, 5, 4, 5);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.Black;
-            dataGridViewCellStyle3.Font = new Font("Ignotum", 16F);
-            dataGridViewCellStyle3.ForeColor = Color.White;
-            dataGridViewCellStyle3.SelectionBackColor = Color.Gray;
-            dataGridViewCellStyle3.SelectionForeColor = Color.White;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            dataGridView1.RowHeadersVisible = false;
-            dataGridViewCellStyle4.BackColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = Color.Black;
+            dataGridViewCellStyle4.Font = new Font("BIZ UDGothic", 16F);
             dataGridViewCellStyle4.ForeColor = Color.White;
             dataGridViewCellStyle4.SelectionBackColor = Color.Gray;
             dataGridViewCellStyle4.SelectionForeColor = Color.White;
-            dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+            dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridView1.RowHeadersVisible = false;
+            dataGridViewCellStyle5.BackColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle5.Font = new Font("BIZ UDGothic", 16F);
+            dataGridViewCellStyle5.ForeColor = Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = Color.Gray;
+            dataGridViewCellStyle5.SelectionForeColor = Color.White;
+            dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle5;
             dataGridView1.RowTemplate.Height = 50;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.Size = new Size(738, 440);
+            dataGridView1.Size = new Size(802, 492);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellFormatting += dataGridView1_CellFormatting;
-            dataGridView1.MouseDown += dataGridView1_MouseDown;
             dataGridView1.MouseMove += dataGridView1_MouseMove;
-            dataGridView1.MouseUp += dataGridView1_MouseUp;
             // 
             // cPos
             // 
             dataGridViewCellStyle2.BackColor = Color.Red;
             dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.NullValue = null;
             dataGridViewCellStyle2.SelectionBackColor = Color.White;
             dataGridViewCellStyle2.SelectionForeColor = Color.Black;
             cPos.DefaultCellStyle = dataGridViewCellStyle2;
@@ -140,23 +175,240 @@
             openFileDialog1.FileName = "openFileDialog1";
             openFileDialog1.Filter = "dataout.txt|dataout.txt|Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
             // 
+            // btnCamerasTV
+            // 
+            btnCamerasTV.BackColor = Color.Black;
+            btnCamerasTV.Cursor = Cursors.Hand;
+            btnCamerasTV.Image = Properties.Resources.live_tv_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnCamerasTV.Location = new Point(13, 248);
+            btnCamerasTV.Margin = new Padding(4, 3, 4, 3);
+            btnCamerasTV.Name = "btnCamerasTV";
+            btnCamerasTV.Padding = new Padding(11, 12, 11, 12);
+            btnCamerasTV.Size = new Size(69, 72);
+            btnCamerasTV.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnCamerasTV.TabIndex = 1;
+            btnCamerasTV.TabStop = false;
+            toolTip1.SetToolTip(btnCamerasTV, "TV Cameras");
+            btnCamerasTV.Click += btnCamerasTV_Click;
+            btnCamerasTV.MouseMove += dataGridView1_MouseMove;
+            // 
+            // btnCamerasCockpit
+            // 
+            btnCamerasCockpit.BackColor = Color.Black;
+            btnCamerasCockpit.Cursor = Cursors.Hand;
+            btnCamerasCockpit.Image = Properties.Resources.search_hands_free_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnCamerasCockpit.Location = new Point(13, 327);
+            btnCamerasCockpit.Margin = new Padding(4, 3, 4, 3);
+            btnCamerasCockpit.Name = "btnCamerasCockpit";
+            btnCamerasCockpit.Padding = new Padding(11, 12, 11, 12);
+            btnCamerasCockpit.Size = new Size(69, 72);
+            btnCamerasCockpit.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnCamerasCockpit.TabIndex = 1;
+            btnCamerasCockpit.TabStop = false;
+            toolTip1.SetToolTip(btnCamerasCockpit, "Cockpit Cameras");
+            btnCamerasCockpit.Click += btnCamerasCockpit_Click;
+            btnCamerasCockpit.MouseMove += dataGridView1_MouseMove;
+            // 
+            // btnCamerasHelicopter
+            // 
+            btnCamerasHelicopter.BackColor = Color.Black;
+            btnCamerasHelicopter.Cursor = Cursors.Hand;
+            btnCamerasHelicopter.Image = Properties.Resources.helicopter_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnCamerasHelicopter.Location = new Point(13, 406);
+            btnCamerasHelicopter.Margin = new Padding(4, 3, 4, 3);
+            btnCamerasHelicopter.Name = "btnCamerasHelicopter";
+            btnCamerasHelicopter.Padding = new Padding(11, 12, 11, 12);
+            btnCamerasHelicopter.Size = new Size(69, 72);
+            btnCamerasHelicopter.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnCamerasHelicopter.TabIndex = 1;
+            btnCamerasHelicopter.TabStop = false;
+            toolTip1.SetToolTip(btnCamerasHelicopter, "Helicopter");
+            btnCamerasHelicopter.Click += btnCamerasHelicopter_Click;
+            btnCamerasHelicopter.MouseMove += dataGridView1_MouseMove;
+            // 
+            // btnCamerasCar
+            // 
+            btnCamerasCar.BackColor = Color.Black;
+            btnCamerasCar.Cursor = Cursors.Hand;
+            btnCamerasCar.Image = Properties.Resources.sports_motorsports_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnCamerasCar.Location = new Point(13, 483);
+            btnCamerasCar.Margin = new Padding(4, 3, 4, 3);
+            btnCamerasCar.Name = "btnCamerasCar";
+            btnCamerasCar.Padding = new Padding(11, 12, 11, 12);
+            btnCamerasCar.Size = new Size(69, 72);
+            btnCamerasCar.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnCamerasCar.TabIndex = 1;
+            btnCamerasCar.TabStop = false;
+            toolTip1.SetToolTip(btnCamerasCar, "Car Cameras");
+            btnCamerasCar.Click += btnCamerasCar_Click;
+            btnCamerasCar.MouseMove += dataGridView1_MouseMove;
+            // 
+            // btnCamerasRandom
+            // 
+            btnCamerasRandom.BackColor = Color.Black;
+            btnCamerasRandom.Cursor = Cursors.Hand;
+            btnCamerasRandom.Image = Properties.Resources.ifl_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnCamerasRandom.Location = new Point(13, 562);
+            btnCamerasRandom.Margin = new Padding(4, 3, 4, 3);
+            btnCamerasRandom.Name = "btnCamerasRandom";
+            btnCamerasRandom.Padding = new Padding(11, 12, 11, 12);
+            btnCamerasRandom.Size = new Size(69, 72);
+            btnCamerasRandom.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnCamerasRandom.TabIndex = 1;
+            btnCamerasRandom.TabStop = false;
+            toolTip1.SetToolTip(btnCamerasRandom, "Random");
+            btnCamerasRandom.Click += btnCamerasRandom_Click;
+            btnCamerasRandom.MouseMove += dataGridView1_MouseMove;
+            // 
+            // btnMoveWindow
+            // 
+            btnMoveWindow.BackColor = Color.Black;
+            btnMoveWindow.Cursor = Cursors.SizeAll;
+            btnMoveWindow.Image = Properties.Resources.open_with_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnMoveWindow.Location = new Point(13, 13);
+            btnMoveWindow.Margin = new Padding(4, 3, 4, 3);
+            btnMoveWindow.Name = "btnMoveWindow";
+            btnMoveWindow.Padding = new Padding(11, 12, 11, 12);
+            btnMoveWindow.Size = new Size(69, 72);
+            btnMoveWindow.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnMoveWindow.TabIndex = 1;
+            btnMoveWindow.TabStop = false;
+            toolTip1.SetToolTip(btnMoveWindow, "Move Window");
+            btnMoveWindow.MouseDoubleClick += btnMoveWindow_MouseDoubleClick;
+            btnMoveWindow.MouseDown += btnMoveWindow_MouseDown;
+            btnMoveWindow.MouseMove += btnMoveWindow_MouseMove;
+            btnMoveWindow.MouseUp += btnMoveWindow_MouseUp;
+            // 
+            // btnShowList
+            // 
+            btnShowList.BackColor = Color.Black;
+            btnShowList.Cursor = Cursors.Hand;
+            btnShowList.Image = Properties.Resources.keyboard_double_arrow_left_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnShowList.Location = new Point(13, 92);
+            btnShowList.Margin = new Padding(4, 3, 4, 3);
+            btnShowList.Name = "btnShowList";
+            btnShowList.Padding = new Padding(11, 12, 11, 12);
+            btnShowList.Size = new Size(69, 72);
+            btnShowList.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnShowList.TabIndex = 1;
+            btnShowList.TabStop = false;
+            toolTip1.SetToolTip(btnShowList, "Show List");
+            btnShowList.Click += btnShowList_Click;
+            btnShowList.MouseMove += dataGridView1_MouseMove;
+            // 
+            // btnMinimize
+            // 
+            btnMinimize.BackColor = Color.Black;
+            btnMinimize.Cursor = Cursors.Hand;
+            btnMinimize.Image = Properties.Resources.minimize_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnMinimize.Location = new Point(90, 13);
+            btnMinimize.Margin = new Padding(4, 3, 4, 3);
+            btnMinimize.Name = "btnMinimize";
+            btnMinimize.Padding = new Padding(11, 12, 11, 12);
+            btnMinimize.Size = new Size(69, 72);
+            btnMinimize.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnMinimize.TabIndex = 1;
+            btnMinimize.TabStop = false;
+            toolTip1.SetToolTip(btnMinimize, "Minimize");
+            btnMinimize.Visible = false;
+            btnMinimize.Click += btnMinimize_Click;
+            // 
+            // btnExit
+            // 
+            btnExit.BackColor = Color.Black;
+            btnExit.Cursor = Cursors.Hand;
+            btnExit.Image = Properties.Resources.close_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnExit.Location = new Point(158, 13);
+            btnExit.Margin = new Padding(4, 3, 4, 3);
+            btnExit.Name = "btnExit";
+            btnExit.Padding = new Padding(11, 12, 11, 12);
+            btnExit.Size = new Size(69, 72);
+            btnExit.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnExit.TabIndex = 1;
+            btnExit.TabStop = false;
+            toolTip1.SetToolTip(btnExit, "Exit");
+            btnExit.Visible = false;
+            btnExit.Click += btnExit_Click;
+            // 
+            // btnEnableWrite
+            // 
+            btnEnableWrite.BackColor = Color.Black;
+            btnEnableWrite.Cursor = Cursors.Hand;
+            btnEnableWrite.Image = Properties.Resources.pause_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnEnableWrite.Location = new Point(13, 170);
+            btnEnableWrite.Margin = new Padding(4, 3, 4, 3);
+            btnEnableWrite.Name = "btnEnableWrite";
+            btnEnableWrite.Padding = new Padding(11, 12, 11, 12);
+            btnEnableWrite.Size = new Size(69, 72);
+            btnEnableWrite.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnEnableWrite.TabIndex = 1;
+            btnEnableWrite.TabStop = false;
+            toolTip1.SetToolTip(btnEnableWrite, "Enable Write");
+            btnEnableWrite.Click += btnEnableWrite_Click;
+            btnEnableWrite.MouseMove += dataGridView1_MouseMove;
+            // 
+            // TransgenderPride
+            // 
+            TransgenderPride.BackColor = Color.Black;
+            TransgenderPride.Cursor = Cursors.Hand;
+            TransgenderPride.Image = Properties.Resources.transgender_1000dp_FFF_FILL0_wght400_GRAD0_opsz481;
+            TransgenderPride.Location = new Point(90, 562);
+            TransgenderPride.Margin = new Padding(4, 3, 4, 3);
+            TransgenderPride.Name = "TransgenderPride";
+            TransgenderPride.Padding = new Padding(11, 12, 11, 12);
+            TransgenderPride.Size = new Size(69, 72);
+            TransgenderPride.SizeMode = PictureBoxSizeMode.StretchImage;
+            TransgenderPride.TabIndex = 1;
+            TransgenderPride.TabStop = false;
+            TransgenderPride.Visible = false;
+            TransgenderPride.Click += TransgenderPride_Click;
+            TransgenderPride.MouseMove += dataGridView1_MouseMove;
+            // 
+            // timerRun
+            // 
+            timerRun.Enabled = true;
+            timerRun.Interval = 2000;
+            timerRun.Tick += timerRun_Tick;
+            // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(8F, 23F);
+            AutoScaleDimensions = new SizeF(13F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             BackColor = Color.Fuchsia;
-            ClientSize = new Size(914, 608);
+            ClientSize = new Size(992, 680);
+            Controls.Add(TransgenderPride);
+            Controls.Add(btnCamerasRandom);
+            Controls.Add(btnCamerasCar);
+            Controls.Add(btnCamerasHelicopter);
+            Controls.Add(btnCamerasCockpit);
+            Controls.Add(btnShowList);
+            Controls.Add(btnMoveWindow);
+            Controls.Add(btnExit);
+            Controls.Add(btnMinimize);
+            Controls.Add(btnEnableWrite);
+            Controls.Add(btnCamerasTV);
             Controls.Add(dataGridView1);
-            Font = new Font("Ignotum", 16F);
+            Font = new Font("Microsoft YaHei UI", 16F);
             FormBorderStyle = FormBorderStyle.None;
-            Margin = new Padding(2, 4, 2, 4);
+            Margin = new Padding(4, 5, 4, 5);
             Name = "Form1";
             Opacity = 0.9D;
             Text = "Asseto Corsa Remote Control";
             TransparencyKey = Color.Fuchsia;
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnCamerasTV).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnCamerasCockpit).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnCamerasHelicopter).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnCamerasCar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnCamerasRandom).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnMoveWindow).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnShowList).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnMinimize).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnExit).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnEnableWrite).EndInit();
+            ((System.ComponentModel.ISupportInitialize)TransgenderPride).EndInit();
             ResumeLayout(false);
         }
 
@@ -164,11 +416,24 @@
 
         private DataGridView dataGridView1;
         private OpenFileDialog openFileDialog1;
+        private PictureBox btnCamerasTV;
+        private ToolTip toolTip1;
+        private PictureBox btnCamerasCockpit;
+        private PictureBox btnCamerasHelicopter;
+        private PictureBox btnCamerasCar;
+        private PictureBox btnCamerasRandom;
+        private PictureBox btnMoveWindow;
+        private PictureBox btnShowList;
+        private PictureBox btnMinimize;
+        private PictureBox btnExit;
         private DataGridViewTextBoxColumn cPos;
         private DataGridViewTextBoxColumn cName;
         private DataGridViewTextBoxColumn cStatus;
         private DataGridViewTextBoxColumn cID;
         private DataGridViewTextBoxColumn cSpeed;
         private DataGridViewTextBoxColumn cTyres;
+        private PictureBox btnEnableWrite;
+        private PictureBox TransgenderPride;
+        private System.Windows.Forms.Timer timerRun;
     }
 }

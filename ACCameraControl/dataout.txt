@@ -1,5 +1,5 @@
 Kagurazaka Yukari|1||1||M
-Kagurazaka MoeAya|3||2||S
+Kagurazaka MoeAya|3||2||M
 Kagurazaka Miyabi|4||3||S
 Kagurazaka Masae|2||4||M
-Kagurazaka Yashi|5||5||M
+Kagurazaka Yashi|5||5||S
