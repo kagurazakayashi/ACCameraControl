@@ -16,6 +16,9 @@ namespace ACCameraControl
         private Int64 shotcounter = 0;
         private int lastSortedColumnIndex = -1;
         private ListSortDirection lastSortDirection = ListSortDirection.Ascending;
+        private bool isResizing = false;
+        private Point lastMousePosition;
+        private int gridViewHeightCompensation = 32;
 
         public Form1()
         {
@@ -52,6 +55,8 @@ namespace ACCameraControl
                 }
             }
             LoadDataToGrid();
+            autoResizeGridView(0, -1);
+            resizeButton_DoubleClick(sender, e);
         }
 
         private void LoadDataToGrid()
@@ -86,7 +91,7 @@ namespace ACCameraControl
             }
             dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            autoResizeGridView();
+            UpdateResizeButtonPosition();
             RestoreUserSort();
             //autoResizeForm();
         }
@@ -103,18 +108,52 @@ namespace ACCameraControl
             }
         }
 
-        private void autoResizeGridView()
+        private Size autoResizeGridView(int paddingX = -1, int paddingY = -1, bool resize = true)
         {
-            int paddingX = 60;
-            int paddingY = 30;
-            int totalColumnWidth = dataGridView1.Columns
-                .Cast<DataGridViewColumn>()
-                .Sum(col => col.Width);
-            int totalRowHeight = dataGridView1.Rows
-                .Cast<DataGridViewRow>()
-                .Sum(row => row.Height) + dataGridView1.ColumnHeadersHeight;
-            dataGridView1.Width = totalColumnWidth + paddingX;
-            dataGridView1.Height = totalRowHeight + paddingY;
+            Size newSize = new Size();
+            if (paddingX >= 0)
+            {
+                int totalColumnWidth = dataGridView1.Columns
+                    .Cast<DataGridViewColumn>()
+                    .Sum(col => col.Width);
+
+                bool hasVerticalScrollbar = false;
+                int totalRowHeight = dataGridView1.Rows
+                    .Cast<DataGridViewRow>()
+                    .Sum(row => row.Height);
+
+                if (totalRowHeight + dataGridView1.ColumnHeadersHeight > dataGridView1.ClientSize.Height)
+                {
+                    hasVerticalScrollbar = true;
+                }
+                int scrollbarWidth = hasVerticalScrollbar ? SystemInformation.VerticalScrollBarWidth : 0;
+                newSize.Width = totalColumnWidth + paddingX + scrollbarWidth;
+                if (resize) dataGridView1.Width = newSize.Width;
+            }
+            if (paddingY >= 0)
+            {
+                int totalRowHeight = dataGridView1.Rows
+                    .Cast<DataGridViewRow>()
+                    .Sum(row => row.Height);
+                int totalContentHeight = totalRowHeight + dataGridView1.ColumnHeadersHeight;
+                bool hasHorizontalScrollbar = false;
+                int totalColumnWidth = dataGridView1.Columns
+                    .Cast<DataGridViewColumn>()
+                    .Sum(col => col.Width);
+                if (totalColumnWidth > dataGridView1.ClientSize.Width)
+                {
+                    hasHorizontalScrollbar = true;
+                }
+                int scrollbarHeight = hasHorizontalScrollbar ? SystemInformation.HorizontalScrollBarHeight : 0;
+                newSize.Height = totalContentHeight + paddingY + scrollbarHeight;
+                if (resize) dataGridView1.Height = newSize.Height;
+            }
+            if (resize)
+            {
+                Width = dataGridView1.ClientSize.Width + 80;
+                Height = dataGridView1.ClientSize.Height + 20;
+            }
+            return newSize;
         }
 
         private void autoResizeForm()
@@ -362,5 +401,101 @@ namespace ACCameraControl
             }
         }
 
+        private void UpdateResizeButtonPosition()
+        {
+            bool isVerticalScrollbarVisible = false;
+            foreach (Control ctrl in dataGridView1.Controls)
+            {
+                if (ctrl is VScrollBar vScroll && vScroll.Visible)
+                {
+                    isVerticalScrollbarVisible = true;
+                    break;
+                }
+            }
+            if (isVerticalScrollbarVisible)
+            {
+                resizeButton.Width = dataGridView1.Width;
+            }
+            else
+            {
+                resizeButton.Width = dataGridView1.Width - SystemInformation.VerticalScrollBarWidth;
+            }
+            resizeButton.Location = new Point(
+                resizeButton.Location.X,
+                dataGridView1.Bottom - resizeButton.Height
+            );
+        }
+
+        private void resizeButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                resizeButton.BackColor = Color.Yellow;
+                isResizing = true;
+                lastMousePosition = MousePosition;
+            }
+        }
+
+        private void resizeButton_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isResizing)
+            {
+                resizeButton.BackColor = Color.Yellow;
+                Point currentPosition = MousePosition;
+                //int dx = currentPosition.X - lastMousePosition.X;
+                int dy = currentPosition.Y - lastMousePosition.Y;
+                //this.Width += dx;
+                int newH = this.Height + dy;
+                if (newH <= autoResizeGridView(0, 0, false).Height + gridViewHeightCompensation && newH >= this.MinimumSize.Height)
+                {
+                    this.Height = newH;
+                    lastMousePosition = currentPosition;
+                }
+            }
+            else
+            {
+                resizeButton.BackColor = Color.White;
+            }
+        }
+
+        private void resizeButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                resizeButton.BackColor = Color.Gray;
+                isResizing = false;
+            }
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            UpdateResizeButtonPosition();
+        }
+
+        private void Form1_LocationChanged(object sender, EventArgs e)
+        {
+            UpdateResizeButtonPosition();
+        }
+
+        private void resizeButton_MouseLeave(object sender, EventArgs e)
+        {
+            resizeButton.BackColor = Color.Gray;
+        }
+
+        private void resizeButton_DoubleClick(object sender, EventArgs e)
+        {
+            var currentScreen = Screen.FromControl(this);
+            int gridViewH = autoResizeGridView(0, 0, false).Height + gridViewHeightCompensation;
+            int winH = currentScreen.Bounds.Height - 48;
+            this.Top = currentScreen.Bounds.Top;
+            if (gridViewH > winH)
+            {
+                this.Height = winH;
+            }
+            else
+            {
+                this.Height = gridViewH;
+            }
+        }
     }
 }
