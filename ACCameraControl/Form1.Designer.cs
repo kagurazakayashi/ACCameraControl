@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
             cPos = new DataGridViewTextBoxColumn();
             cName = new DataGridViewTextBoxColumn();
@@ -55,6 +55,7 @@
             TransgenderPride = new PictureBox();
             timerRun = new System.Windows.Forms.Timer(components);
             resizeButton = new PictureBox();
+            labelAlert = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)btnCamerasTV).BeginInit();
             ((System.ComponentModel.ISupportInitialize)btnCamerasCockpit).BeginInit();
@@ -81,14 +82,14 @@
             dataGridView1.BorderStyle = BorderStyle.None;
             dataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dataGridView1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = Color.Black;
-            dataGridViewCellStyle5.Font = new Font("Microsoft YaHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            dataGridViewCellStyle5.ForeColor = Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = Color.Black;
-            dataGridViewCellStyle5.SelectionForeColor = Color.White;
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
-            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.Black;
+            dataGridViewCellStyle1.Font = new Font("Microsoft YaHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            dataGridViewCellStyle1.ForeColor = Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = Color.Black;
+            dataGridViewCellStyle1.SelectionForeColor = Color.White;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridView1.ColumnHeadersHeight = 32;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { cPos, cName, cStatus, cID, cSpeed, cTyres });
             dataGridView1.EnableHeadersVisualStyles = false;
@@ -98,20 +99,20 @@
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = Color.Black;
-            dataGridViewCellStyle7.Font = new Font("Microsoft YaHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            dataGridViewCellStyle7.ForeColor = Color.White;
-            dataGridViewCellStyle7.SelectionBackColor = Color.Gray;
-            dataGridViewCellStyle7.SelectionForeColor = Color.White;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
-            dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.Black;
+            dataGridViewCellStyle3.Font = new Font("Microsoft YaHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            dataGridViewCellStyle3.ForeColor = Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = Color.Gray;
+            dataGridViewCellStyle3.SelectionForeColor = Color.White;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dataGridView1.RowHeadersVisible = false;
-            dataGridViewCellStyle8.BackColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle8.ForeColor = Color.White;
-            dataGridViewCellStyle8.SelectionBackColor = Color.Gray;
-            dataGridViewCellStyle8.SelectionForeColor = Color.White;
-            dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle4.ForeColor = Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = Color.Gray;
+            dataGridViewCellStyle4.SelectionForeColor = Color.White;
+            dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
             dataGridView1.RowTemplate.Height = 30;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -119,18 +120,19 @@
             dataGridView1.TabIndex = 0;
             dataGridView1.CellFormatting += dataGridView1_CellFormatting;
             dataGridView1.ColumnHeaderMouseClick += dataGridView1_ColumnHeaderMouseClick;
+            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             dataGridView1.SortCompare += dataGridView1_SortCompare;
             dataGridView1.MouseMove += dataGridView1_MouseMove;
             // 
             // cPos
             // 
-            dataGridViewCellStyle6.BackColor = Color.Red;
-            dataGridViewCellStyle6.ForeColor = Color.White;
-            dataGridViewCellStyle6.Format = "N0";
-            dataGridViewCellStyle6.NullValue = null;
-            dataGridViewCellStyle6.SelectionBackColor = Color.White;
-            dataGridViewCellStyle6.SelectionForeColor = Color.Black;
-            cPos.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.BackColor = Color.Red;
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.NullValue = null;
+            dataGridViewCellStyle2.SelectionBackColor = Color.White;
+            dataGridViewCellStyle2.SelectionForeColor = Color.Black;
+            cPos.DefaultCellStyle = dataGridViewCellStyle2;
             cPos.HeaderText = "POS";
             cPos.Name = "cPos";
             cPos.ReadOnly = true;
@@ -369,22 +371,37 @@
             resizeButton.MouseMove += resizeButton_MouseMove;
             resizeButton.MouseUp += resizeButton_MouseUp;
             // 
+            // labelAlert
+            // 
+            labelAlert.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            labelAlert.BackColor = Color.Black;
+            labelAlert.ForeColor = Color.Red;
+            labelAlert.Location = new Point(70, 40);
+            labelAlert.Name = "labelAlert";
+            labelAlert.Padding = new Padding(10);
+            labelAlert.Size = new Size(600, 436);
+            labelAlert.TabIndex = 3;
+            labelAlert.Text = "LOADING";
+            labelAlert.TextAlign = ContentAlignment.MiddleCenter;
+            labelAlert.Visible = false;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Fuchsia;
             ClientSize = new Size(774, 485);
-            Controls.Add(resizeButton);
             Controls.Add(TransgenderPride);
+            Controls.Add(btnExit);
+            Controls.Add(btnMinimize);
+            Controls.Add(labelAlert);
+            Controls.Add(resizeButton);
             Controls.Add(btnCamerasRandom);
             Controls.Add(btnCamerasCar);
             Controls.Add(btnCamerasHelicopter);
             Controls.Add(btnCamerasCockpit);
             Controls.Add(btnShowList);
             Controls.Add(btnMoveWindow);
-            Controls.Add(btnExit);
-            Controls.Add(btnMinimize);
             Controls.Add(btnEnableWrite);
             Controls.Add(btnCamerasTV);
             Controls.Add(dataGridView1);
@@ -439,5 +456,6 @@
         private PictureBox TransgenderPride;
         private System.Windows.Forms.Timer timerRun;
         private PictureBox resizeButton;
+        private Label labelAlert;
     }
 }

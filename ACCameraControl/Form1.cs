@@ -8,17 +8,18 @@ namespace ACCameraControl
 {
     public partial class Form1 : Form
     {
-        private string gameDataOutFile = "dataout.txt";
-        private string saveDataFile = "datain.txt";
+        private static string gameDataOutFile = "dataout.txt";
+        private static string saveDataFile = "datain.txt";
+        private static int gridViewHeightCompensation = 32;
         private WindowMove winMv;
         private Control[] cameraButtons;
-        private Int64 sendCounter = 0;
-        private Int64 shotcounter = 0;
+        private int sendCounter = 0;
+        private int shotcounter = 0;
         private int lastSortedColumnIndex = -1;
         private ListSortDirection lastSortDirection = ListSortDirection.Ascending;
         private bool isResizing = false;
         private Point lastMousePosition;
-        private int gridViewHeightCompensation = 32;
+        private bool enableSelectionChangedFunc = true;
 
         public Form1()
         {
@@ -36,37 +37,55 @@ namespace ACCameraControl
 
         private void Form1_Load(object sender, EventArgs e)
         {
+#if DEBUG
+            Console.WriteLine(Text);
+#endif
             Location = new Point(0, 0);
             dataGridView1.Columns[0].ValueType = typeof(int);
             dataGridView1.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridView1.Columns[3].ValueType = typeof(int);
-            if (!File.Exists(gameDataOutFile))
+            if (LoadDataToGrid())
             {
-                openFileDialog1.Title = $"Can't find the file {gameDataOutFile} , please specify one manually.";
-                openFileDialog1.InitialDirectory = Application.StartupPath;
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    gameDataOutFile = openFileDialog1.FileName;
-                }
-                else
-                {
-                    Application.Exit();
-                    return;
-                }
+                autoResizeGridView(0, -1);
+                resizeButton_DoubleClick(sender, e);
             }
-            LoadDataToGrid();
-            autoResizeGridView(0, -1);
-            resizeButton_DoubleClick(sender, e);
         }
 
-        private void LoadDataToGrid()
+        private void ShowError(string message)
+        {
+#if DEBUG
+            Console.WriteLine(message);
+#endif
+            labelAlert.Size = dataGridView1.Size;
+            labelAlert.Location = dataGridView1.Location;
+            labelAlert.Text = message;
+            labelAlert.Visible = true;
+            btnEnableWrite_Click(null, null);
+        }
+
+        private bool LoadDataToGrid()
         {
             dataGridView1.Rows.Clear();
-            var lines = File.ReadAllLines(gameDataOutFile);
-            Console.WriteLine("Data Length:" + lines.Length.ToString());
+            string[] lines = [];
+            try
+            {
+                lines = File.ReadAllLines(gameDataOutFile);
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+                return false;
+            }
+            if (labelAlert.Visible)
+            {
+                labelAlert.Visible = false;
+            }
+#if DEBUG
+            Console.WriteLine("[I] ROW: " + lines.Length.ToString());
+#endif
             if (lines.Length == 0)
             {
-                return;
+                return false;
             }
             foreach (var line in lines)
             {
@@ -75,11 +94,8 @@ namespace ACCameraControl
                 int mustCount = 6;
                 if (valuesCount != mustCount)
                 {
-                    if (MessageBox.Show($"There is an error in the game output data. \r\n Requires data amount: {mustCount}\r\n Gets data amount: {valuesCount}", "Data Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
-                    {
-                        Application.Exit();
-                        return;
-                    }
+                    ShowError($"There is an error in the game output data.\r\nRequires data amount: {mustCount}\r\nGets data amount: {valuesCount}");
+                    return false;
                 }
                 string dPos = values[1];
                 string dName = values[0];
@@ -92,8 +108,8 @@ namespace ACCameraControl
             dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             UpdateResizeButtonPosition();
-            RestoreUserSort();
             //autoResizeForm();
+            return true;
         }
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -176,7 +192,9 @@ namespace ACCameraControl
         {
             winMv.MouseMove(sender, e);
             btnMinimize.Visible = true;
+            btnMinimize.BringToFront();
             btnExit.Visible = true;
+            btnExit.BringToFront();
         }
 
         private void btnMoveWindow_MouseUp(object sender, MouseEventArgs e)
@@ -194,8 +212,13 @@ namespace ACCameraControl
         private void btnEnableWrite_Click(object sender, EventArgs e)
         {
             timerRun.Enabled = !timerRun.Enabled;
-            btnEnableWrite.Image = timerRun.Enabled ? Resources.pause_1000dp_FFF_FILL0_wght400_GRAD0_opsz48 : Resources.play_arrow_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
-            btnEnableWrite.BackColor = timerRun.Enabled ? Color.Gray : Color.Black;
+            enableWrite(timerRun.Enabled);
+        }
+
+        private void enableWrite(bool enable)
+        {
+            btnEnableWrite.Image = enable ? Resources.pause_1000dp_FFF_FILL0_wght400_GRAD0_opsz48 : Resources.play_arrow_1000dp_FFF_FILL0_wght400_GRAD0_opsz48;
+            btnEnableWrite.BackColor = enable ? Color.Gray : Color.Black;
         }
 
         private void btnMoveWindow_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -285,30 +308,35 @@ namespace ACCameraControl
         {
             clearAllCameras();
             btnCamerasTV.BackColor = Color.Red;
+            WriteFile();
         }
 
         private void btnCamerasCockpit_Click(object sender, EventArgs e)
         {
             clearAllCameras();
             btnCamerasCockpit.BackColor = Color.Red;
+            WriteFile();
         }
 
         private void btnCamerasHelicopter_Click(object sender, EventArgs e)
         {
             clearAllCameras();
             btnCamerasHelicopter.BackColor = Color.Red;
+            WriteFile();
         }
 
         private void btnCamerasCar_Click(object sender, EventArgs e)
         {
             clearAllCameras();
             btnCamerasCar.BackColor = Color.Red;
+            WriteFile();
         }
 
         private void btnCamerasRandom_Click(object sender, EventArgs e)
         {
             clearAllCameras();
             btnCamerasRandom.BackColor = Color.Red;
+            WriteFile();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -347,22 +375,36 @@ namespace ACCameraControl
 
         private void timerRun_Tick(object sender, EventArgs e)
         {
+            enableSelectionChangedFunc = false;
             btnEnableWrite.BackColor = btnEnableWrite.BackColor == Color.Black ? Color.Gray : Color.Black;
+            LoadDataToGrid();
+            WriteFile();
+            enableSelectionChangedFunc = true;
+        }
+
+        private void WriteFile()
+        {
             sendCounter++;
             string selectID = nowSelectID();
-            // 回报格式是: ID | 镜头号 | 镜头号变一次就+1 | 每两秒递增1
             string info = $"{selectID}|{nowSelectedCamera()}|{shotcounter}|{sendCounter}";
-            Console.WriteLine(info);
+#if DEBUG
+            Console.WriteLine("[O] " + info);
+#endif
             try
             {
                 File.WriteAllText(saveDataFile, info);
             }
             catch (Exception ex)
             {
+#if DEBUG
                 Console.WriteLine(ex.ToString());
+#endif
             }
-            LoadDataToGrid();
-            selectIDrow(selectID);
+
+            //enableSelectionChangedFunc = false;
+            //LoadDataToGrid();
+            //selectIDrow(selectID);
+            //enableSelectionChangedFunc = true;
         }
 
         private void dataGridView1_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
@@ -495,6 +537,22 @@ namespace ACCameraControl
             else
             {
                 this.Height = gridViewH;
+            }
+        }
+
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (enableSelectionChangedFunc)
+            {
+#if DEBUG
+                if (dataGridView1.SelectedRows.Count > 0)
+                {
+                    DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
+                    Console.WriteLine("[S] ID=" + selectedRow.Cells[3].Value?.ToString().Trim() + " : " + selectedRow.Cells[1].Value?.ToString().Trim());
+                }
+#endif
+                shotcounter++;
+                WriteFile();
             }
         }
     }
