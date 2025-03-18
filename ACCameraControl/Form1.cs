@@ -65,7 +65,6 @@ namespace ACCameraControl
 
         private bool LoadDataToGrid()
         {
-            dataGridView1.Rows.Clear();
             string[] lines = [];
             try
             {
@@ -73,44 +72,98 @@ namespace ACCameraControl
             }
             catch (Exception ex)
             {
+#if DEBUG
+                Console.WriteLine("[E] " + ex.Message);
+#endif
                 ShowError(ex.Message);
                 return false;
             }
-            if (labelAlert.Visible)
-            {
-                labelAlert.Visible = false;
-            }
+
 #if DEBUG
             Console.WriteLine("[I] ROW: " + lines.Length.ToString());
 #endif
-            if (lines.Length == 0)
+
+            if (labelAlert.Visible) labelAlert.Visible = false;
+
+            if (lines.Length == 0) return false;
+
+            string? selectedDID = null;
+            if (dataGridView1.CurrentRow != null && !dataGridView1.CurrentRow.IsNewRow)
             {
-                return false;
+                selectedDID = dataGridView1.CurrentRow.Cells[3].Value?.ToString();
             }
+
+            var updatedIDs = new HashSet<string>();
+            var existingRows = dataGridView1.Rows.Cast<DataGridViewRow>()
+                                 .Where(r => r.IsNewRow == false)
+                                 .ToDictionary(r => r.Cells[3].Value?.ToString() ?? "", r => r);
+
+            int needLine = 6;
+
             foreach (var line in lines)
             {
-                string[] values = line.Split('|');
-                int valuesCount = values.Length;
-                int mustCount = 6;
-                if (valuesCount != mustCount)
+                var values = line.Split('|');
+                if (values.Length < needLine)
                 {
-                    ShowError($"There is an error in the game output data.\r\nRequires data amount: {mustCount}\r\nGets data amount: {valuesCount}");
+                    ShowError($"数据格式错误：应为{needLine}列，实际为{values.Length}");
                     return false;
                 }
+
                 string dPos = values[1];
                 string dName = values[0];
                 string dStatus = values[2];
-                string dID = values[3];
+                string dID = values[3];     // 主键
                 string dSpeed = values[4];
                 string dTyres = values[5];
-                dataGridView1.Rows.Add([dPos, dName, dStatus, dID, dSpeed, dTyres]);
+
+                updatedIDs.Add(dID);
+
+                if (existingRows.TryGetValue(dID, out var row))
+                {
+                    row.Cells[0].Value = dPos;
+                    row.Cells[1].Value = dName;
+                    row.Cells[2].Value = dStatus;
+                    row.Cells[4].Value = dSpeed;
+                    row.Cells[5].Value = dTyres;
+                }
+                else
+                {
+                    dataGridView1.Rows.Add(dPos, dName, dStatus, dID, dSpeed, dTyres);
+                }
             }
+
+            foreach (DataGridViewRow row in dataGridView1.Rows.Cast<DataGridViewRow>().ToList())
+            {
+                if (row.IsNewRow) continue;
+                string rowID = row.Cells[3].Value?.ToString() ?? "";
+                if (!updatedIDs.Contains(rowID))
+                {
+                    dataGridView1.Rows.Remove(row);
+                }
+            }
+
             dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
+
+            if (!string.IsNullOrEmpty(selectedDID))
+            {
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (row.IsNewRow) continue;
+                    if (row.Cells[3].Value?.ToString() == selectedDID)
+                    {
+                        row.Selected = true;
+                        dataGridView1.CurrentCell = row.Cells[0];  // 设定为当前单元格
+                        break;
+                    }
+                }
+            }
+
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             UpdateResizeButtonPosition();
-            //autoResizeForm();
+
             return true;
         }
+
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -397,7 +450,7 @@ namespace ACCameraControl
             catch (Exception ex)
             {
 #if DEBUG
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine("[E] " + ex.ToString());
 #endif
             }
 
