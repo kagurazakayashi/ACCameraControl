@@ -38,7 +38,7 @@ namespace ACCameraControl
         private void Form1_Load(object sender, EventArgs e)
         {
 #if DEBUG
-            Console.WriteLine(Text);
+            Logger.Log('O', Text);
 #endif
             Location = new Point(0, 0);
             dataGridView1.Columns[0].ValueType = typeof(int);
@@ -54,7 +54,7 @@ namespace ACCameraControl
         private void ShowError(string message)
         {
 #if DEBUG
-            Console.WriteLine(message);
+            Logger.Log('E', message);
 #endif
             labelAlert.Size = dataGridView1.Size;
             labelAlert.Location = dataGridView1.Location;
@@ -73,15 +73,11 @@ namespace ACCameraControl
             catch (Exception ex)
             {
 #if DEBUG
-                Console.WriteLine("[E] " + ex.Message);
+                Logger.Log('E', ex.Message);
 #endif
                 ShowError(ex.Message);
                 return false;
             }
-
-#if DEBUG
-            Console.WriteLine("[I] ROW: " + lines.Length.ToString());
-#endif
 
             if (labelAlert.Visible) labelAlert.Visible = false;
 
@@ -105,7 +101,7 @@ namespace ACCameraControl
                 var values = line.Split('|');
                 if (values.Length < needLine)
                 {
-                    ShowError($"数据格式错误：应为{needLine}列，实际为{values.Length}");
+                    ShowError($"Wrong data format:\r\nThere should be at least {needLine} columns,\r\nBut it is actually {values.Length} columns.");
                     return false;
                 }
 
@@ -120,6 +116,15 @@ namespace ACCameraControl
 
                 if (existingRows.TryGetValue(dID, out var row))
                 {
+#if DEBUG
+                    string infoO = $"{row.Cells[0].Value} | {row.Cells[1].Value} | {row.Cells[2].Value} | {row.Cells[3].Value} | {row.Cells[4].Value} | {row.Cells[5].Value}";
+                    string infoN = $"{dPos} | {dName} | {dStatus} | {dID} | {dSpeed} | {dTyres}";
+                    if (infoO != infoN)
+                    {
+                        Logger.Log('I', $"U: {infoO}");
+                        Logger.Log('I', $"-> {infoN}");
+                    }
+#endif
                     row.Cells[0].Value = dPos;
                     row.Cells[1].Value = dName;
                     row.Cells[2].Value = dStatus;
@@ -128,6 +133,9 @@ namespace ACCameraControl
                 }
                 else
                 {
+#if DEBUG
+                    Logger.Log('I', $"ADD {dID} {dName}");
+#endif
                     dataGridView1.Rows.Add(dPos, dName, dStatus, dID, dSpeed, dTyres);
                 }
             }
@@ -138,6 +146,9 @@ namespace ACCameraControl
                 string rowID = row.Cells[3].Value?.ToString() ?? "";
                 if (!updatedIDs.Contains(rowID))
                 {
+#if DEBUG
+                    Logger.Log('I', $"DEL {row.Cells[3]} {row.Cells[1]}");
+#endif
                     dataGridView1.Rows.Remove(row);
                 }
             }
@@ -265,6 +276,9 @@ namespace ACCameraControl
         private void btnEnableWrite_Click(object sender, EventArgs e)
         {
             timerRun.Enabled = !timerRun.Enabled;
+#if DEBUG
+            Logger.Log('S', $"UPDATE {timerRun.Enabled}");
+#endif
             enableWrite(timerRun.Enabled);
         }
 
@@ -359,6 +373,9 @@ namespace ACCameraControl
 
         private void btnCamerasTV_Click(object sender, EventArgs e)
         {
+#if DEBUG
+            Logger.Log('S', "CAM: TV");
+#endif
             clearAllCameras();
             btnCamerasTV.BackColor = Color.Red;
             WriteFile();
@@ -366,6 +383,9 @@ namespace ACCameraControl
 
         private void btnCamerasCockpit_Click(object sender, EventArgs e)
         {
+#if DEBUG
+            Logger.Log('S', "CAM: Cockpit");
+#endif
             clearAllCameras();
             btnCamerasCockpit.BackColor = Color.Red;
             WriteFile();
@@ -373,6 +393,9 @@ namespace ACCameraControl
 
         private void btnCamerasHelicopter_Click(object sender, EventArgs e)
         {
+#if DEBUG
+            Logger.Log('S', "CAM: Helicopter");
+#endif
             clearAllCameras();
             btnCamerasHelicopter.BackColor = Color.Red;
             WriteFile();
@@ -380,6 +403,9 @@ namespace ACCameraControl
 
         private void btnCamerasCar_Click(object sender, EventArgs e)
         {
+#if DEBUG
+            Logger.Log('S', "CAM: Car");
+#endif
             clearAllCameras();
             btnCamerasCar.BackColor = Color.Red;
             WriteFile();
@@ -387,6 +413,9 @@ namespace ACCameraControl
 
         private void btnCamerasRandom_Click(object sender, EventArgs e)
         {
+#if DEBUG
+            Logger.Log('S', "CAM: Random");
+#endif
             clearAllCameras();
             btnCamerasRandom.BackColor = Color.Red;
             WriteFile();
@@ -441,7 +470,7 @@ namespace ACCameraControl
             string selectID = nowSelectID();
             string info = $"{selectID}|{nowSelectedCamera()}|{shotcounter}|{sendCounter}";
 #if DEBUG
-            Console.WriteLine("[O] " + info);
+            Logger.Log('O', info);
 #endif
             try
             {
@@ -450,7 +479,7 @@ namespace ACCameraControl
             catch (Exception ex)
             {
 #if DEBUG
-                Console.WriteLine("[E] " + ex.ToString());
+                Logger.Log('E', ex.ToString());
 #endif
             }
 
@@ -469,7 +498,7 @@ namespace ACCameraControl
                     int.TryParse(e.CellValue2?.ToString(), out int val2))
                 {
                     e.SortResult = val1.CompareTo(val2);
-                    e.Handled = true; // 阻止默认字符串排序
+                    e.Handled = true;
                 }
             }
         }
@@ -601,7 +630,7 @@ namespace ACCameraControl
                 if (dataGridView1.SelectedRows.Count > 0)
                 {
                     DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
-                    Console.WriteLine("[S] ID=" + selectedRow.Cells[3].Value?.ToString().Trim() + " : " + selectedRow.Cells[1].Value?.ToString().Trim());
+                    Logger.Log('S', "ID = " + selectedRow.Cells[3].Value?.ToString().Trim() + " : " + selectedRow.Cells[1].Value?.ToString().Trim());
                 }
 #endif
                 shotcounter++;
