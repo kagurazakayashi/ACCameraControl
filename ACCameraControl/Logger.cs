@@ -1,4 +1,4 @@
-﻿using System;
+﻿#if DEBUG
 
 public static class Logger
 {
@@ -41,3 +41,5 @@ public static class Logger
         Console.ForegroundColor = originalColor;
     }
 }
+
+#endif

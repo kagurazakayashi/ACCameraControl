@@ -13,6 +13,7 @@
     <RepositoryType>git</RepositoryType>
     <Copyright>Kagurazaka</Copyright>
     <Authors>KagurazakaYashi</Authors>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,6 +30,10 @@
     <Compile Remove="TestData\**" />
     <EmbeddedResource Remove="TestData\**" />
     <None Remove="TestData\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="icon.ico" />
   </ItemGroup>
 
   <ItemGroup>

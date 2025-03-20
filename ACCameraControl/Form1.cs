@@ -11,6 +11,7 @@ namespace ACCameraControl
         private static string gameDataOutFile = "dataout.txt";
         private static string saveDataFile = "datain.txt";
         private static int gridViewHeightCompensation = 32;
+        private static bool outputProximityRanking = true;
         private WindowMove winMv;
         private Control[] cameraButtons;
         private int sendCounter = 0;
@@ -83,7 +84,7 @@ namespace ACCameraControl
 
             if (lines.Length == 0) return false;
 
-            string? selectedDID = null;
+            string selectedDID = null;
             if (dataGridView1.CurrentRow != null && !dataGridView1.CurrentRow.IsNewRow)
             {
                 selectedDID = dataGridView1.CurrentRow.Cells[3].Value?.ToString();
@@ -98,7 +99,7 @@ namespace ACCameraControl
 
             foreach (var line in lines)
             {
-                var values = line.Split('|');
+                string[] values = line.Split('|');
                 if (values.Length < needLine)
                 {
                     ShowError($"Wrong data format:\r\nThere should be at least {needLine} columns,\r\nBut it is actually {values.Length} columns.");
@@ -108,7 +109,7 @@ namespace ACCameraControl
                 string dPos = values[1];
                 string dName = values[0];
                 string dStatus = values[2];
-                string dID = values[3];     // 主键
+                string dID = values[3];
                 string dSpeed = values[4];
                 string dTyres = values[5];
 
@@ -348,6 +349,38 @@ namespace ACCameraControl
             return "0";
         }
 
+        private string[] GetSurroundingValues()
+        {
+            if (dataGridView1.SelectedRows.Count == 0)
+                return new string[] { "0", "0", "0" };
+            DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
+            if (selectedRow.Cells[0].Value == null)
+                return new string[] { "0", "0", "0" };
+            int selectedId = Convert.ToInt32(selectedRow.Cells[0].Value);
+            // 收集所有行的数据：id 和对应的值
+            var rows = new List<(int id, string val)>();
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow) continue; // 跳过空行
+
+                if (row.Cells[0].Value != null && row.Cells[3].Value != null)
+                {
+                    int id = Convert.ToInt32(row.Cells[0].Value);
+                    string val = row.Cells[3].Value.ToString();
+                    rows.Add((id, val));
+                }
+            }
+            var sortedRows = rows.OrderBy(r => r.id).ToList();
+            int index = sortedRows.FindIndex(r => r.id == selectedId);
+            if (index == -1)
+                return new string[] { "0", "0", "0" };
+            string prev = index > 0 ? sortedRows[index - 1].val : "0";
+            string curr = sortedRows[index].val;
+            string next = index < sortedRows.Count - 1 ? sortedRows[index + 1].val : "0";
+            return new string[] { prev, curr, next };
+        }
+
+
         private void selectIDrow(string selectID)
         {
             dataGridView1.ClearSelection();
@@ -467,8 +500,17 @@ namespace ACCameraControl
         private void WriteFile()
         {
             sendCounter++;
-            string selectID = nowSelectID();
-            string info = $"{selectID}|{nowSelectedCamera()}|{shotcounter}|{sendCounter}";
+            string info = "{nowSelectedCamera()}|{shotcounter}|{sendCounter}";
+            if (outputProximityRanking)
+            {
+                string[] selectIDs = GetSurroundingValues();
+                info = $"{selectIDs[0]} {selectIDs[1]} {selectIDs[2]}|{info}";
+            }
+            else
+            {
+                string selectID = nowSelectID();
+                info = $"{selectID}|{info}";
+            }
 #if DEBUG
             Logger.Log('O', info);
 #endif
